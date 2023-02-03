@@ -17,6 +17,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/timer-test', function () {
-    return 'timer-test';
-});
+Route::get('/timer', 'App\Http\Controllers\TimerController@show');
+Route::get('/get_time', 'App\Http\Controllers\TimerController@getTime');
