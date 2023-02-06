@@ -25,6 +25,9 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/timer', 'App\Http\Controllers\TimerController@show');
+Route::get('/get_time', 'App\Http\Controllers\TimerController@getTime');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
