@@ -1,3 +1,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+h1 {
+    @apply text-4xl leading-loose;
+}
+
+.container {
+    @apply text-center h-screen;
+}
+
+.content {
+    @apply px-6 py-3;
+}
+
+.timer-btn-container {
+    @apply flex items-center justify-center;
+}
+
+.btn {
+    @apply font-bold px-4 py-2 rounded;
+}
+
+.btn-blue {
+    @apply bg-blue-500 text-white;
+}
+
+.btn-blue:hover {
+    @apply bg-blue-400;
+}
+
+.btn-red {
+    @apply bg-red-500 text-white;
+}
+
+.btn-red:hover {
+    @apply bg-red-400;
+}
