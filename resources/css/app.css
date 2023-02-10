@@ -19,7 +19,7 @@ h1 {
 }
 
 .btn {
-    @apply font-bold px-4 py-2 rounded;
+    @apply font-bold px-4 py-2 mx-2 my-4 rounded;
 }
 
 .btn-blue {
