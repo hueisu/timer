@@ -4,6 +4,7 @@ import { computed, ref } from "vue";
 import moment from "moment";
 
 const second = ref(0);
+const timerStatus = ref("notStarted"); // started, stopped
 let intervalId;
 
 function startTimer() {
@@ -11,12 +12,14 @@ function startTimer() {
         intervalId = setInterval(function () {
             second.value++;
         }, 1000);
+        timerStatus.value = "started";
     }
 }
 
 function stopTimer() {
     clearInterval(intervalId);
     intervalId = undefined;
+    timerStatus.value = "stopped";
 }
 
 const days = computed(() => {
@@ -52,8 +55,27 @@ function formatTimeNumber(number) {
             <span v-if="days">{{ days }} days </span>
             <span>{{ time }}</span>
             <section class="timer-btn-container">
-                <button class="btn btn-blue" @click="startTimer">Start</button>
-                <button class="btn btn-red" @click="stopTimer">Stop</button>
+                <button
+                    v-if="timerStatus === 'notStarted'"
+                    class="btn btn-blue"
+                    @click="startTimer"
+                >
+                    Start
+                </button>
+                <button
+                    v-else-if="timerStatus === 'started'"
+                    class="btn btn-red"
+                    @click="stopTimer"
+                >
+                    Stop
+                </button>
+                <button
+                    v-else="timerStatus === 'stopped'"
+                    class="btn btn-green"
+                    @click="startTimer"
+                >
+                    Continue
+                </button>
             </section>
         </div>
     </div>
