@@ -16,6 +16,7 @@ function startTimer() {
 
 function stopTimer() {
     clearInterval(intervalId);
+    intervalId = undefined;
 }
 
 const days = computed(() => {
