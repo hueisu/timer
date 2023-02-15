@@ -6,7 +6,7 @@ import BaseLayout from "../Layouts/BaseLayout.vue";
 
 const second = ref(0);
 const timerStatus = ref("notStarted");
-const timeHistories = ref([
+const timeRecords = ref([
     {
         key: 0,
         date: "2022-01-01",
@@ -97,7 +97,7 @@ function formatTimeNumber(number) {
             </div>
             <table
                 class="text-left w-full mt-6 text-xs md:text-base timer-table"
-                v-if="timeHistories.length"
+                v-if="timeRecords.length"
             >
                 <thead class="border-b">
                     <tr>
@@ -110,13 +110,13 @@ function formatTimeNumber(number) {
                 <tbody>
                     <tr
                         class="even:bg-slate-100"
-                        v-for="history in timeHistories"
-                        :key="history.key"
+                        v-for="record in timeRecords"
+                        :key="record.key"
                     >
-                        <td>{{ history.key }}</td>
-                        <td>{{ history.date }}</td>
-                        <td>{{ history.startTime }}</td>
-                        <td>{{ history.cumulatedTime }}</td>
+                        <td>{{ record.key }}</td>
+                        <td>{{ record.date }}</td>
+                        <td>{{ record.startTime }}</td>
+                        <td>{{ record.cumulatedTime }}</td>
                     </tr>
                 </tbody>
             </table>
