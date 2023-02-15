@@ -96,7 +96,7 @@ function formatTimeNumber(number) {
                 </section>
             </div>
             <table
-                class="text-left w-full mt-6 text-xs md:text-base timer-table"
+                class="text-left mt-6 mx-auto text-xs sm:text-base timer-table"
                 v-if="timeRecords.length"
             >
                 <thead class="border-b">
