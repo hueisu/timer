@@ -2,9 +2,10 @@
 import { Head } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
 import moment from "moment";
+import BaseLayout from "../Layouts/BaseLayout.vue";
 
 const second = ref(0);
-const timerStatus = ref("notStarted"); // started, stopped
+const timerStatus = ref("notStarted");
 let intervalId;
 
 function startTimer() {
@@ -46,14 +47,15 @@ function formatTimeNumber(number) {
 
 <template>
     <Head>
-        <title>Timer</title>
+        <title>{{ second ? time + " - " : "" }}Timer</title>
     </Head>
-    <div class="font-mono container">
-        <h1>Timer</h1>
-        <div class="content">
-            <div>Tag: Timer project</div>
-            <span v-if="days">{{ days }} days </span>
-            <span>{{ time }}</span>
+    <BaseLayout>
+        <div class="text-center">
+            <div class="text-lg">Tag: Timer project</div>
+            <div class="text-3xl my-4">
+                <span v-if="days">{{ days }} days </span>
+                <span>{{ time }}</span>
+            </div>
             <section class="timer-btn-container">
                 <button
                     v-if="timerStatus === 'notStarted'"
@@ -78,7 +80,7 @@ function formatTimeNumber(number) {
                 </button>
             </section>
         </div>
-    </div>
+    </BaseLayout>
 </template>
 
 <style scoped></style>

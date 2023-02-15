@@ -3,15 +3,7 @@
 @tailwind utilities;
 
 h1 {
-    @apply text-4xl leading-loose;
-}
-
-.container {
-    @apply text-center h-screen;
-}
-
-.content {
-    @apply px-6 py-3;
+    @apply text-4xl;
 }
 
 .timer-btn-container {
