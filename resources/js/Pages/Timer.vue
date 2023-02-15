@@ -2,8 +2,10 @@
 import { Head } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
 import moment from "moment";
+import BaseLayout from "../Layouts/BaseLayout.vue";
 
 const second = ref(0);
+const timerStatus = ref("notStarted");
 let intervalId;
 
 function startTimer() {
@@ -11,12 +13,14 @@ function startTimer() {
         intervalId = setInterval(function () {
             second.value++;
         }, 1000);
+        timerStatus.value = "started";
     }
 }
 
 function stopTimer() {
     clearInterval(intervalId);
     intervalId = undefined;
+    timerStatus.value = "stopped";
 }
 
 const days = computed(() => {
@@ -43,20 +47,40 @@ function formatTimeNumber(number) {
 
 <template>
     <Head>
-        <title>Timer</title>
+        <title>{{ second ? time + " - " : "" }}Timer</title>
     </Head>
-    <div class="font-mono container">
-        <h1>Timer</h1>
-        <div class="content">
-            <div>Tag: Timer project</div>
-            <span v-if="days">{{ days }} days </span>
-            <span>{{ time }}</span>
+    <BaseLayout>
+        <div class="text-center">
+            <div class="text-lg">Tag: Timer project</div>
+            <div class="text-3xl my-4">
+                <span v-if="days">{{ days }} days </span>
+                <span>{{ time }}</span>
+            </div>
             <section class="timer-btn-container">
-                <button class="btn btn-blue" @click="startTimer">Start</button>
-                <button class="btn btn-red" @click="stopTimer">Stop</button>
+                <button
+                    v-if="timerStatus === 'notStarted'"
+                    class="btn btn-blue"
+                    @click="startTimer"
+                >
+                    Start
+                </button>
+                <button
+                    v-else-if="timerStatus === 'started'"
+                    class="btn btn-red"
+                    @click="stopTimer"
+                >
+                    Stop
+                </button>
+                <button
+                    v-else="timerStatus === 'stopped'"
+                    class="btn btn-green"
+                    @click="startTimer"
+                >
+                    Continue
+                </button>
             </section>
         </div>
-    </div>
+    </BaseLayout>
 </template>
 
 <style scoped></style>

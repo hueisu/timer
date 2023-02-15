@@ -3,15 +3,7 @@
 @tailwind utilities;
 
 h1 {
-    @apply text-4xl leading-loose;
-}
-
-.container {
-    @apply text-center h-screen;
-}
-
-.content {
-    @apply px-6 py-3;
+    @apply text-4xl;
 }
 
 .timer-btn-container {
@@ -36,4 +28,12 @@ h1 {
 
 .btn-red:hover {
     @apply bg-red-400;
+}
+
+.btn-green {
+    @apply bg-green-500 text-white;
+}
+
+.btn-green:hover {
+    @apply bg-green-400;
 }
