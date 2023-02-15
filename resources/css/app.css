@@ -37,3 +37,8 @@ h1 {
 .btn-green:hover {
     @apply bg-green-400;
 }
+
+.timer-table th,
+.timer-table td {
+    @apply px-2 py-1;
+}

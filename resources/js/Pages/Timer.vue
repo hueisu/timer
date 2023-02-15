@@ -6,6 +6,20 @@ import BaseLayout from "../Layouts/BaseLayout.vue";
 
 const second = ref(0);
 const timerStatus = ref("notStarted");
+const timeHistories = ref([
+    {
+        key: 0,
+        date: "2022-01-01",
+        startTime: "14:50:00",
+        cumulatedTime: "00:50:24",
+    },
+    {
+        key: 1,
+        date: "2022-01-02",
+        startTime: "20:50:00",
+        cumulatedTime: "01:50:24",
+    },
+]);
 let intervalId;
 
 function startTimer() {
@@ -50,35 +64,62 @@ function formatTimeNumber(number) {
         <title>{{ second ? time + " - " : "" }}Timer</title>
     </Head>
     <BaseLayout>
-        <div class="text-center">
-            <div class="text-lg">Tag: Timer project</div>
-            <div class="text-3xl my-4">
-                <span v-if="days">{{ days }} days </span>
-                <span>{{ time }}</span>
+        <div class="relative top-1/4">
+            <div class="text-center">
+                <div class="text-lg">Tag: Timer project</div>
+                <div class="text-3xl my-4">
+                    <span v-if="days">{{ days }} days </span>
+                    <span>{{ time }}</span>
+                </div>
+                <section class="timer-btn-container">
+                    <button
+                        v-if="timerStatus === 'notStarted'"
+                        class="btn btn-blue"
+                        @click="startTimer"
+                    >
+                        Start
+                    </button>
+                    <button
+                        v-else-if="timerStatus === 'started'"
+                        class="btn btn-red"
+                        @click="stopTimer"
+                    >
+                        Stop
+                    </button>
+                    <button
+                        v-else="timerStatus === 'stopped'"
+                        class="btn btn-green"
+                        @click="startTimer"
+                    >
+                        Continue
+                    </button>
+                </section>
             </div>
-            <section class="timer-btn-container">
-                <button
-                    v-if="timerStatus === 'notStarted'"
-                    class="btn btn-blue"
-                    @click="startTimer"
-                >
-                    Start
-                </button>
-                <button
-                    v-else-if="timerStatus === 'started'"
-                    class="btn btn-red"
-                    @click="stopTimer"
-                >
-                    Stop
-                </button>
-                <button
-                    v-else="timerStatus === 'stopped'"
-                    class="btn btn-green"
-                    @click="startTimer"
-                >
-                    Continue
-                </button>
-            </section>
+            <table
+                class="text-left w-full mt-6 text-xs md:text-base timer-table"
+                v-if="timeHistories.length"
+            >
+                <thead class="border-b">
+                    <tr>
+                        <th>Key</th>
+                        <th>Date</th>
+                        <th>Start time</th>
+                        <th>Cumulated time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        class="even:bg-slate-100"
+                        v-for="history in timeHistories"
+                        :key="history.key"
+                    >
+                        <td>{{ history.key }}</td>
+                        <td>{{ history.date }}</td>
+                        <td>{{ history.startTime }}</td>
+                        <td>{{ history.cumulatedTime }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </BaseLayout>
 </template>
