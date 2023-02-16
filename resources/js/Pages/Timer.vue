@@ -2,24 +2,17 @@
 import { Head } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
 import moment from "moment";
+import _ from "lodash";
 import BaseLayout from "../Layouts/BaseLayout.vue";
 
 const second = ref(0);
 const timerStatus = ref("notStarted");
-const timeRecords = ref([
-    {
-        key: 0,
-        date: "2022-01-01",
-        startTime: "14:50:00",
-        cumulatedTime: "00:50:24",
-    },
-    {
-        key: 1,
-        date: "2022-01-02",
-        startTime: "20:50:00",
-        cumulatedTime: "01:50:24",
-    },
-]);
+const timeRecords = ref([]);
+const newTimeRecord = ref({
+    key: timeRecords.value.length,
+    date: null,
+    startTime: null,
+});
 let intervalId;
 
 function startTimer() {
@@ -28,6 +21,11 @@ function startTimer() {
             second.value++;
         }, 1000);
         timerStatus.value = "started";
+
+        if (!newTimeRecord.value.date) {
+            newTimeRecord.value.date = moment().format("YYYY-MM-DD");
+            newTimeRecord.value.startTime = moment().format("HH:mm");
+        }
     }
 }
 
@@ -97,26 +95,40 @@ function formatTimeNumber(number) {
             </div>
             <table
                 class="text-left mt-6 mx-auto text-xs sm:text-base timer-table"
-                v-if="timeRecords.length"
+                v-if="timeRecords.length || timerStatus !== 'notStarted'"
             >
                 <thead class="border-b">
                     <tr>
                         <th>Key</th>
                         <th>Date</th>
                         <th>Start time</th>
-                        <th>Cumulated time</th>
+                        <th>Duration</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr
-                        class="even:bg-slate-100"
                         v-for="record in timeRecords"
+                        class="even:bg-slate-100"
                         :key="record.key"
                     >
                         <td>{{ record.key }}</td>
                         <td>{{ record.date }}</td>
                         <td>{{ record.startTime }}</td>
-                        <td>{{ record.cumulatedTime }}</td>
+                        <td>{{ record.duration }}</td>
+                    </tr>
+                    <tr
+                        v-if="timerStatus !== 'notStarted'"
+                        class="even:bg-slate-100"
+                    >
+                        <td>{{ newTimeRecord.key }}</td>
+                        <td>{{ newTimeRecord.date }}</td>
+                        <td>{{ newTimeRecord.startTime }}</td>
+                        <td>
+                            <template v-if="days != 0">
+                                {{ days }} days
+                            </template>
+                            {{ time }}
+                        </td>
                     </tr>
                 </tbody>
             </table>
