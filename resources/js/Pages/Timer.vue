@@ -1,11 +1,15 @@
 <script setup>
 import { Head } from "@inertiajs/vue3";
-import { computed, ref } from "vue";
-import moment from "moment";
+import { computed, onMounted, ref } from "vue";
+import moment from "moment-timezone";
+import _ from "lodash";
+import axios from "axios";
 import BaseLayout from "../Layouts/BaseLayout.vue";
 
 const second = ref(0);
 const timerStatus = ref("notStarted");
+const timeRecords = ref([]);
+const newTimeRecord = ref({});
 let intervalId;
 
 function startTimer() {
@@ -14,6 +18,11 @@ function startTimer() {
             second.value++;
         }, 1000);
         timerStatus.value = "started";
+
+        if (!newTimeRecord.value.startTime) {
+            newTimeRecord.value.key = timeRecords.value.length;
+            newTimeRecord.value.startTime = moment().tz("Asia/Taipei").format();
+        }
     }
 }
 
@@ -23,18 +32,25 @@ function stopTimer() {
     timerStatus.value = "stopped";
 }
 
-const days = computed(() => {
-    const momentDuration = moment.duration(second.value, "second");
-    return momentDuration.days();
-});
-
-const time = computed(() => {
-    const momentDuration = moment.duration(second.value, "second");
+function convertDuration(duration) {
+    const momentDuration = moment.duration(duration, "second");
+    const days = momentDuration.days();
     const hours = formatTimeNumber(momentDuration.hours()) || "00";
     const minutes = formatTimeNumber(momentDuration.minutes()) || "00";
     const seconds = formatTimeNumber(momentDuration.seconds()) || "00";
-    return `${hours}:${minutes}:${seconds}`;
-});
+    const time = `${hours}:${minutes}:${seconds}`;
+    return days
+        ? `${days} days ${hours}:${minutes}:${seconds}`
+        : `${hours}:${minutes}:${seconds}`;
+}
+
+function convertToDate(time) {
+    return moment(time).format("YYYY-MM-DD");
+}
+
+function convertToTime(time) {
+    return moment(time).format("HH:mm");
+}
 
 function formatTimeNumber(number) {
     let n = String(number);
@@ -43,42 +59,118 @@ function formatTimeNumber(number) {
     }
     return n;
 }
+
+onMounted(() => {
+    getRecords();
+});
+
+function getRecords() {
+    axios.get("/get_records").then(function (res) {
+        timeRecords.value = res.data;
+    });
+}
+
+function saveRecord() {
+    if (timerStatus.value !== "notStarted") {
+        const recordData = {
+            tag_name: "Timer Project",
+            duration: second.value,
+            description: "Timer Testing",
+            start_time: newTimeRecord.value.startTime,
+        };
+        axios.post("/save_record", recordData).then(function (res) {
+            // TODO: show loading message.
+            // TODO: check if res.status OK, then show saved success message.
+            // refresh records data
+            getRecords();
+            // reset to initial state
+            second.value = 0;
+            newTimeRecord.value = {
+                key: timeRecords.value.length,
+                startTime: null,
+            };
+            timerStatus.value = "notStarted";
+        });
+    }
+}
 </script>
 
 <template>
     <Head>
-        <title>{{ second ? time + " - " : "" }}Timer</title>
+        <title>{{ second ? convertDuration(second) + " - " : "" }}Timer</title>
     </Head>
     <BaseLayout>
-        <div class="text-center">
-            <div class="text-lg">Tag: Timer project</div>
-            <div class="text-3xl my-4">
-                <span v-if="days">{{ days }} days </span>
-                <span>{{ time }}</span>
+        <div class="relative top-1/4">
+            <div class="text-center">
+                <div class="text-lg">Tag: Timer project</div>
+                <div class="text-3xl my-4">
+                    <span>{{ convertDuration(second) }}</span>
+                </div>
+                <section class="timer-btn-container">
+                    <button
+                        v-if="timerStatus === 'notStarted'"
+                        class="btn btn-blue"
+                        @click="startTimer"
+                    >
+                        Start
+                    </button>
+                    <button
+                        v-else-if="timerStatus === 'started'"
+                        class="btn btn-red"
+                        @click="stopTimer"
+                    >
+                        Stop
+                    </button>
+                    <button
+                        v-else="timerStatus === 'stopped'"
+                        class="btn btn-green"
+                        @click="startTimer"
+                    >
+                        Continue
+                    </button>
+                    <button
+                        v-if="timerStatus !== 'notStarted'"
+                        class="btn btn-yellow"
+                        @click="saveRecord"
+                    >
+                        Save
+                    </button>
+                </section>
             </div>
-            <section class="timer-btn-container">
-                <button
-                    v-if="timerStatus === 'notStarted'"
-                    class="btn btn-blue"
-                    @click="startTimer"
-                >
-                    Start
-                </button>
-                <button
-                    v-else-if="timerStatus === 'started'"
-                    class="btn btn-red"
-                    @click="stopTimer"
-                >
-                    Stop
-                </button>
-                <button
-                    v-else="timerStatus === 'stopped'"
-                    class="btn btn-green"
-                    @click="startTimer"
-                >
-                    Continue
-                </button>
-            </section>
+            <table
+                class="text-left mt-6 mx-auto text-xs sm:text-base timer-table"
+                v-if="timeRecords.length || timerStatus !== 'notStarted'"
+            >
+                <thead class="border-b">
+                    <tr>
+                        <th>Key</th>
+                        <th>Date</th>
+                        <th>Start time</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        v-for="(record, recordId) in timeRecords"
+                        class="even:bg-slate-100"
+                        :key="recordId"
+                    >
+                        <td>{{ recordId }}</td>
+                        <td>{{ convertToDate(record.start_time) }}</td>
+                        <td>{{ convertToTime(record.start_time) }}</td>
+                        <td>{{ convertDuration(record.duration) }}</td>
+                    </tr>
+                    <tr
+                        v-if="timerStatus !== 'notStarted'"
+                        class="even:bg-slate-100"
+                    >
+                        <td>{{ newTimeRecord.key }}</td>
+                        <td>{{ convertToDate(newTimeRecord.startTime) }}</td>
+                        <td>{{ convertToTime(newTimeRecord.startTime) }}</td>
+                        <td>{{ convertDuration(second) }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </BaseLayout>
 </template>
