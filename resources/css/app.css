@@ -38,6 +38,14 @@ h1 {
     @apply bg-green-400;
 }
 
+.btn-yellow {
+    @apply bg-yellow-500 text-white;
+}
+
+.btn-yellow:hover {
+    @apply bg-yellow-400;
+}
+
 .timer-table th,
 .timer-table td {
     @apply px-2 py-1;

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TimerRecords;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -11,7 +13,33 @@ class TimerController extends Controller
         return Inertia::render('Timer');
     }
 
-    public function getTime() {
-        return 'time';
+    /**
+     * Store new timer record
+     * 
+     * @param Request $request
+     * @return Response
+     */
+    public function saveRecord(Request $request) {
+        $input = $request->all();
+        $record = [
+            'tag_name' => $input['tag_name'],
+            'duration' => $input['duration'],
+            'description' => $input['description'],
+            'start_time' => Carbon::create($input['start_time']),
+        ];
+        TimerRecords::create($record);
+
+        return 'ok';
+        // TODO: return $response;
+    }
+
+    /**
+     * Get timer records
+     * 
+     * @return TimerRecords $records
+     */
+    public function getRecords() {
+        $records = TimerRecords::all();
+        return $records;
     }
 }

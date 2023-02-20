@@ -26,7 +26,8 @@ Route::get('/', function () {
 });
 
 Route::get('/timer', 'App\Http\Controllers\TimerController@show');
-Route::get('/get_time', 'App\Http\Controllers\TimerController@getTime');
+Route::post('/save_record', 'App\Http\Controllers\TimerController@saveRecord');
+Route::get('/get_records', 'App\Http\Controllers\TimerController@getRecords');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

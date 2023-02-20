@@ -1,13 +1,43 @@
 <?php
 
-namespace App\Models;
+// @formatter:off
+/**
+ * A helper file for your Eloquent Models
+ * Copy the phpDocs from this file to the correct Model,
+ * And remove them from this file, to prevent double declarations.
+ *
+ * @author Barry vd. Heuvel <barryvdh@gmail.com>
+ */
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
+namespace App\Models{
+/**
+ * App\Models\TimerRecords
+ *
+ * @property int $id
+ * @property string|null $tag_name
+ * @property int $duration
+ * @property string|null $description
+ * @property string $start_time
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords query()
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereDuration($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereStartedTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereTagName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereStartTime($value)
+ * @mixin \Eloquent
+ */
+	class TimerRecords extends \Eloquent {}
+}
+
+namespace App\Models{
 /**
  * App\Models\User
  *
@@ -37,41 +67,10 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+ * @mixin \Eloquent
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
- * @mixin \Eloquent
  */
-class User extends Authenticatable
-{
-    use HasApiTokens, HasFactory, Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+	class User extends \Eloquent {}
 }
+

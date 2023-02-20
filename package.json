@@ -19,6 +19,7 @@
         "vue": "^3.2.41"
     },
     "dependencies": {
-        "moment": "^2.29.4"
+        "moment": "^2.29.4",
+        "moment-timezone": "^0.5.40"
     }
 }
