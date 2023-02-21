@@ -5,11 +5,13 @@ import moment from "moment-timezone";
 import _ from "lodash";
 import axios from "axios";
 import BaseLayout from "../Layouts/BaseLayout.vue";
+import LoadingOverlay from "@/Components/LoadingOverlay.vue";
 
 const second = ref(0);
 const timerStatus = ref("notStarted");
 const timeRecords = ref([]);
 const newTimeRecord = ref({});
+const isLoading = ref(false);
 let intervalId;
 
 function startTimer() {
@@ -65,13 +67,18 @@ onMounted(() => {
 });
 
 function getRecords() {
+    isLoading.value = true;
     axios.get("/get_records").then(function (res) {
-        timeRecords.value = res.data;
+        if (res.status == 200) {
+            timeRecords.value = res.data;
+            isLoading.value = false;
+        }
     });
 }
 
 function saveRecord() {
     if (timerStatus.value !== "notStarted") {
+        isLoading.value = true;
         const recordData = {
             tag_name: "Timer Project",
             duration: second.value,
@@ -79,17 +86,18 @@ function saveRecord() {
             start_time: newTimeRecord.value.startTime,
         };
         axios.post("/save_record", recordData).then(function (res) {
-            // TODO: show loading message.
             // TODO: check if res.status OK, then show saved success message.
-            // refresh records data
-            getRecords();
-            // reset to initial state
-            second.value = 0;
-            newTimeRecord.value = {
-                key: timeRecords.value.length,
-                startTime: null,
-            };
-            timerStatus.value = "notStarted";
+            if (res.status == 200) {
+                // refresh records data
+                getRecords();
+                // reset to initial state
+                second.value = 0;
+                newTimeRecord.value = {
+                    key: timeRecords.value.length,
+                    startTime: null,
+                };
+                timerStatus.value = "notStarted";
+            }
         });
     }
 }
@@ -100,6 +108,7 @@ function saveRecord() {
         <title>{{ second ? convertDuration(second) + " - " : "" }}Timer</title>
     </Head>
     <BaseLayout>
+        <LoadingOverlay :is-loading="isLoading"></LoadingOverlay>
         <div class="relative top-1/4">
             <div class="text-center">
                 <div class="text-lg">Tag: Timer project</div>

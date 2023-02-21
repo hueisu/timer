@@ -6,6 +6,25 @@ h1 {
     @apply text-4xl;
 }
 
+#loading {
+    @apply h-screen w-screen absolute left-0 top-0 bg-zinc-400 bg-opacity-60;
+    z-index: 999;
+}
+#loading img {
+    @apply absolute left-1/2
+        top-1/2 transform -translate-x-1/2 -translate-y-1/2;
+}
+
+.loading-enter-active,
+.loading-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.loading-enter-from,
+.loading-leave-to {
+    opacity: 0;
+}
+
 .timer-btn-container {
     @apply flex items-center justify-center;
 }
