@@ -29,8 +29,7 @@ class TimerController extends Controller
         ];
         TimerRecords::create($record);
 
-        return 'ok';
-        // TODO: return $response;
+        return response()->json(['message' => 'Timer record created.']);
     }
 
     /**
@@ -40,6 +39,7 @@ class TimerController extends Controller
      */
     public function getRecords() {
         $records = TimerRecords::all();
-        return $records;
+
+        return response()->json($records);
     }
 }

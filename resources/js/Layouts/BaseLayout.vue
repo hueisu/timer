@@ -5,7 +5,7 @@
                 <div class="text-center text-4xl py-4 font-black">Timer</div>
             </nav>
         </header>
-        <main class="px-6 py-8 h-full">
+        <main class="h-full">
             <slot></slot>
         </main>
         <footer>

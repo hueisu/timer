@@ -6,12 +6,16 @@ import _ from "lodash";
 import axios from "axios";
 import BaseLayout from "../Layouts/BaseLayout.vue";
 import LoadingOverlay from "@/Components/LoadingOverlay.vue";
+import MessageBox from "@/Components/MessageBox.vue";
 
 const second = ref(0);
 const timerStatus = ref("notStarted");
 const timeRecords = ref([]);
 const newTimeRecord = ref({});
 const isLoading = ref(false);
+const message = ref({});
+const messageRef = ref(null);
+
 let intervalId;
 
 function startTimer() {
@@ -85,20 +89,35 @@ function saveRecord() {
             description: "Timer Testing",
             start_time: newTimeRecord.value.startTime,
         };
-        axios.post("/save_record", recordData).then(function (res) {
-            // TODO: check if res.status OK, then show saved success message.
-            if (res.status == 200) {
-                // refresh records data
-                getRecords();
-                // reset to initial state
-                second.value = 0;
-                newTimeRecord.value = {
-                    key: timeRecords.value.length,
-                    startTime: null,
-                };
-                timerStatus.value = "notStarted";
-            }
-        });
+        axios
+            .post("/save_record", recordData)
+            .then(function (res) {
+                if (res.status == 200) {
+                    getRecords();
+                    message.value.status = "success";
+                    message.value.message = res.data.message;
+                    messageRef.value.show();
+
+                    // Reset to initial state
+                    second.value = 0;
+                    newTimeRecord.value = {
+                        key: timeRecords.value.length,
+                        startTime: null,
+                    };
+                    timerStatus.value = "notStarted";
+                } else {
+                    message.value.status = "error";
+                    message.value.message = res.data.message;
+                    messageRef.value.show();
+                    isLoading.value = false;
+                }
+            })
+            .catch(function (error) {
+                message.value.status = "error";
+                message.value.message = error.response.data;
+                messageRef.value.show();
+                isLoading.value = false;
+            });
     }
 }
 </script>
@@ -109,6 +128,7 @@ function saveRecord() {
     </Head>
     <BaseLayout>
         <LoadingOverlay :is-loading="isLoading"></LoadingOverlay>
+        <MessageBox v-bind="message" ref="messageRef"></MessageBox>
         <div class="relative top-1/4">
             <div class="text-center">
                 <div class="text-lg">Tag: Timer project</div>
@@ -138,7 +158,7 @@ function saveRecord() {
                         Continue
                     </button>
                     <button
-                        v-if="timerStatus !== 'notStarted'"
+                        v-if="timerStatus === 'stopped'"
                         class="btn btn-yellow"
                         @click="saveRecord"
                     >

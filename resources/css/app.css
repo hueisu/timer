@@ -25,6 +25,16 @@ h1 {
     opacity: 0;
 }
 
+.message-enter-active,
+.message-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.message-enter-from,
+.message-leave-to {
+    opacity: 0;
+}
+
 .timer-btn-container {
     @apply flex items-center justify-center;
 }
