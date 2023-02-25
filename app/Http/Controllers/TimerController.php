@@ -38,12 +38,18 @@ class TimerController extends Controller
     /**
      * Get timer records
      * 
+     * @param $tagId
      * @return TimerRecords $records
      */
-    public function getRecords() {
+    public function getRecords($tagId = null) {
         $user = Auth::user();
 
-        $userRecords = $user->timerRecords;
+        if ($tagId) {
+            $userRecords = TimerRecords::where('user_id', $user->id)->where('user_tag_id', $tagId)->get();
+        } else {
+            $userRecords = $user->timerRecords;
+        }
+
         $userTags = $user->userTags->unique('tag_name')->values();
 
         return response()->json([

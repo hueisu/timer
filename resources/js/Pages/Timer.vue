@@ -72,9 +72,9 @@ onMounted(() => {
     getRecords();
 });
 
-function getRecords() {
+function getRecords(tagId = null) {
     isLoading.value = true;
-    axios.get("/get_records").then(function (res) {
+    axios.get("/get_records/" + (tagId ?? "")).then(function (res) {
         if (res.status == 200) {
             timeRecords.value = res.data.records;
             tags.value = res.data.tags;
@@ -125,13 +125,17 @@ function saveRecord() {
 }
 
 function selectTag(event) {
-    const index = event.target.selectedIndex;
+    const index = tags.value.findIndex(
+        (tag) => tag.tag_name === event.target.value
+    );
 
-    if (tags.value[index].tag_name === event.target.value) {
-        selectedTagId.value = tags.value[index].id;
-    } else {
+    if (index < 0) {
         message.value.status = "error";
         message.value.message = "Tag's name and index are mismatched.";
+        messageRef.value.show();
+    } else {
+        selectedTagId.value = tags.value[index].id;
+        getRecords(selectedTagId.value);
     }
 }
 </script>
