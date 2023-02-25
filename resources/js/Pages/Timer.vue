@@ -7,6 +7,7 @@ import axios from "axios";
 import BaseLayout from "../Layouts/BaseLayout.vue";
 import LoadingOverlay from "@/Components/LoadingOverlay.vue";
 import MessageBox from "@/Components/MessageBox.vue";
+import CustomModal from "@/Components/CustomModal.vue";
 
 const second = ref(0);
 const timerStatus = ref("notStarted");
@@ -15,6 +16,8 @@ const newTimeRecord = ref({});
 const isLoading = ref(false);
 const message = ref({});
 const messageRef = ref(null);
+const tags = ref({});
+const selectedTagId = ref(null);
 
 let intervalId;
 
@@ -70,21 +73,41 @@ onMounted(() => {
     getRecords();
 });
 
-function getRecords() {
+function getRecords(tagId = null) {
     isLoading.value = true;
-    axios.get("/get_records").then(function (res) {
-        if (res.status == 200) {
-            timeRecords.value = res.data;
+    axios
+        .get("/get_records/" + (tagId ?? ""))
+        .then(function (res) {
+            if (res.status == 200) {
+                timeRecords.value = res.data.records;
+                tags.value = res.data.tags;
+
+                if (res.data.message) {
+                    message.value.status = "error";
+                    message.value.message = res.data.message;
+                    messageRef.value.show();
+                }
+                isLoading.value = false;
+            } else {
+                message.value.status = "error";
+                message.value.message = res.data.message;
+                messageRef.value.show();
+                isLoading.value = false;
+            }
+        })
+        .catch(function (error) {
+            message.value.status = "error";
+            message.value.message = error.response.data;
+            messageRef.value.show();
             isLoading.value = false;
-        }
-    });
+        });
 }
 
 function saveRecord() {
     if (timerStatus.value !== "notStarted") {
         isLoading.value = true;
         const recordData = {
-            tag_name: "Timer Project",
+            tag_id: selectedTagId.value,
             duration: second.value,
             description: "Timer Testing",
             start_time: newTimeRecord.value.startTime,
@@ -93,10 +116,10 @@ function saveRecord() {
             .post("/save_record", recordData)
             .then(function (res) {
                 if (res.status == 200) {
-                    getRecords();
+                    getRecords(selectedTagId.value);
                     message.value.status = "success";
                     message.value.message = res.data.message;
-                    messageRef.value.show();
+                    messageRef.value.show(5000);
 
                     // Reset to initial state
                     second.value = 0;
@@ -120,6 +143,50 @@ function saveRecord() {
             });
     }
 }
+
+function selectTag(event) {
+    const index = tags.value.findIndex(
+        (tag) => tag.tag_name === event.target.value
+    );
+
+    if (index < 0) {
+        message.value.status = "error";
+        message.value.message = "Tag's name and index are mismatched.";
+        messageRef.value.show();
+    } else {
+        selectedTagId.value = tags.value[index].id;
+        getRecords(selectedTagId.value);
+    }
+}
+
+const showModal = ref(false);
+const newTagName = ref(null);
+
+function createNewTag() {
+    if (newTagName) {
+        isLoading.value = true;
+        axios
+            .post("/create_new_tag", { newTagName: newTagName.value })
+            .then(function (res) {
+                isLoading.value = false;
+                if (res.status == 200) {
+                    getRecords();
+                    message.value.status = "success";
+                    message.value.message = res.data.message;
+                    messageRef.value.show(5000);
+
+                    newTagName.value = null;
+                    showModal.value = false;
+                } else {
+                    message.value.status = "error";
+                    message.value.message = res.data.message;
+                    messageRef.value.show();
+                }
+            });
+    } else {
+        // TODO: show error msg when no input value.
+    }
+}
 </script>
 
 <template>
@@ -129,37 +196,70 @@ function saveRecord() {
     <BaseLayout>
         <LoadingOverlay :is-loading="isLoading"></LoadingOverlay>
         <MessageBox v-bind="message" ref="messageRef"></MessageBox>
+        <CustomModal
+            :show-modal="showModal"
+            :closable="true"
+            @close-modal="() => (showModal = false)"
+        >
+            <div
+                class="flex flex-wrap items-center justify-center gap-y-4 gap-x-2 my-4"
+            >
+                <input
+                    v-model="newTagName"
+                    class="shadow appearance-none border rounded px-3 py-2 text-gray-700 focus:shadow-outline"
+                    placeholder="New tag name"
+                />
+                <button class="btn btn-yellow" @click="createNewTag">
+                    Create
+                </button>
+            </div>
+        </CustomModal>
         <div class="relative top-1/4">
             <div class="text-center">
-                <div class="text-lg">Tag: Timer project</div>
+                <div>
+                    <select class="rounded mb-4" @change="selectTag($event)">
+                        <option selected disabled>
+                            --Please select a tag--
+                        </option>
+                        <option v-for="tag in tags" :key="tag.id">
+                            {{ tag.tag_name }}
+                        </option>
+                    </select>
+                    <button
+                        class="btn btn-yellow mx-2 my-4"
+                        @click="() => (showModal = true)"
+                    >
+                        +
+                    </button>
+                </div>
                 <div class="text-3xl my-4">
                     <span>{{ convertDuration(second) }}</span>
                 </div>
                 <section class="timer-btn-container">
                     <button
                         v-if="timerStatus === 'notStarted'"
-                        class="btn btn-blue"
+                        class="btn btn-blue mx-2 my-4"
                         @click="startTimer"
                     >
                         Start
                     </button>
                     <button
                         v-else-if="timerStatus === 'started'"
-                        class="btn btn-red"
+                        class="btn btn-red mx-2 my-4"
                         @click="stopTimer"
                     >
                         Stop
                     </button>
                     <button
                         v-else="timerStatus === 'stopped'"
-                        class="btn btn-green"
+                        class="btn btn-green mx-2 my-4"
                         @click="startTimer"
                     >
                         Continue
                     </button>
                     <button
                         v-if="timerStatus === 'stopped'"
-                        class="btn btn-yellow"
+                        class="btn btn-yellow mx-2 my-4"
                         @click="saveRecord"
                     >
                         Save

@@ -6,10 +6,6 @@ const showMessage = ref(false);
 const props = defineProps({
     status: String,
     message: String,
-    time: {
-        type: Number,
-        default: 5000,
-    },
 });
 
 const classArray = computed(() => {
@@ -26,9 +22,11 @@ const classArray = computed(() => {
     }
 });
 
-function show() {
+function show(time = null) {
     showMessage.value = true;
-    setTimeout(() => hide(), props.time);
+    if (time) {
+        setTimeout(() => hide(), time);
+    }
 }
 
 function hide() {

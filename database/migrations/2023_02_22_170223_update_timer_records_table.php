@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\UserTags;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,9 +14,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('timer_records', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('timer_records', function (Blueprint $table) {
+            $table->foreignIdFor(UserTags::class, 'user_tag_id')->change();
         });
     }
 
@@ -26,6 +26,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('timer_records');
+        Schema::table('timer_records', function (Blueprint $table) {
+            //
+        });
     }
 };
