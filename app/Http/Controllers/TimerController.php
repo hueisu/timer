@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Response;
 
 class TimerController extends Controller
 {
@@ -44,6 +45,14 @@ class TimerController extends Controller
     public function getRecords($tagId = null) {
         $user = Auth::user();
 
+        if (!$user) {
+            return response()->json([
+                'records' => [],
+                'tags' => [],
+                'message' => 'User not found. Please login.',
+            ]);
+        }
+
         if ($tagId) {
             $userRecords = TimerRecords::where('user_id', $user->id)->where('user_tag_id', $tagId)->get();
         } else {
@@ -56,5 +65,22 @@ class TimerController extends Controller
             'records' => $userRecords,
             'tags' => $userTags,
         ]);
+    }
+
+    /**
+     * Save new user tag
+     * 
+     * @param Request $request
+     * @return Response
+     */
+    public function createNewTag(Request $request) {
+        $user = Auth::user();
+
+        UserTags::create([
+            'user_id' => $user->id,
+            'tag_name' => $request->input('newTagName'),
+        ]);
+
+        return response()->json(['message' => 'New Tag created.']);
     }
 }

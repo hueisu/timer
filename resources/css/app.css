@@ -15,6 +15,16 @@ h1 {
         top-1/2 transform -translate-x-1/2 -translate-y-1/2;
 }
 
+#modal {
+    @apply h-screen w-screen absolute left-0 top-0 bg-zinc-500 bg-opacity-80;
+    z-index: 999;
+}
+
+#modal .modal-wrapper {
+    @apply absolute left-1/2
+        top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-slate-100 px-4 py-4;
+}
+
 .loading-enter-active,
 .loading-leave-active {
     transition: opacity 0.5s ease;
@@ -35,12 +45,30 @@ h1 {
     opacity: 0;
 }
 
+.modal-enter-active,
+.modal-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+    opacity: 0;
+}
+
 .timer-btn-container {
     @apply flex items-center justify-center;
 }
 
 .btn {
-    @apply font-bold px-4 py-2 mx-2 my-4 rounded;
+    @apply font-bold px-4 py-2 rounded;
+}
+
+.btn-close {
+    @apply px-2 py-1 bg-gray-600 text-white;
+}
+
+.btn-close:hover {
+    @apply bg-gray-500;
 }
 
 .btn-blue {
