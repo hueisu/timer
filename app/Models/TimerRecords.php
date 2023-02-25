@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  * App\Models\TimerRecords
  *
  * @property int $id
- * @property string|null $tag_name
+ * @property int $user_id
+ * @property int|null $user_tag_id
  * @property int $duration
  * @property string|null $description
  * @property string $start_time
@@ -26,10 +27,17 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereTagName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereStartTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereUserTagId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereUserId($value)
  * @mixin \Eloquent
  */
 class TimerRecords extends Model
 {
     use HasFactory;
-    protected $fillable = ['tag_name', 'duration', 'description', 'start_time'];
+    protected $fillable = ['user_tag_id', 'user_id', 'duration', 'description', 'start_time'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

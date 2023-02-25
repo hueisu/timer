@@ -15,6 +15,8 @@ const newTimeRecord = ref({});
 const isLoading = ref(false);
 const message = ref({});
 const messageRef = ref(null);
+const tags = ref({});
+const selectedTagId = ref(null);
 
 let intervalId;
 
@@ -74,7 +76,8 @@ function getRecords() {
     isLoading.value = true;
     axios.get("/get_records").then(function (res) {
         if (res.status == 200) {
-            timeRecords.value = res.data;
+            timeRecords.value = res.data.records;
+            tags.value = res.data.tags;
             isLoading.value = false;
         }
     });
@@ -84,7 +87,7 @@ function saveRecord() {
     if (timerStatus.value !== "notStarted") {
         isLoading.value = true;
         const recordData = {
-            tag_name: "Timer Project",
+            tag_id: selectedTagId.value,
             duration: second.value,
             description: "Timer Testing",
             start_time: newTimeRecord.value.startTime,
@@ -120,6 +123,17 @@ function saveRecord() {
             });
     }
 }
+
+function selectTag(event) {
+    const index = event.target.selectedIndex;
+
+    if (tags.value[index].tag_name === event.target.value) {
+        selectedTagId.value = tags.value[index].id;
+    } else {
+        message.value.status = "error";
+        message.value.message = "Tag's name and index are mismatched.";
+    }
+}
 </script>
 
 <template>
@@ -131,7 +145,12 @@ function saveRecord() {
         <MessageBox v-bind="message" ref="messageRef"></MessageBox>
         <div class="relative top-1/4">
             <div class="text-center">
-                <div class="text-lg">Tag: Timer project</div>
+                <select class="rounded mb-4" @change="selectTag($event)">
+                    <option selected disabled>--Please select a tag--</option>
+                    <option v-for="tag in tags" :key="tag.id">
+                        {{ tag.tag_name }}
+                    </option>
+                </select>
                 <div class="text-3xl my-4">
                     <span>{{ convertDuration(second) }}</span>
                 </div>

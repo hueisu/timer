@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\TimerRecords;
+use App\Models\UserTags;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class TimerController extends Controller
@@ -22,7 +24,8 @@ class TimerController extends Controller
     public function saveRecord(Request $request) {
         $input = $request->all();
         $record = [
-            'tag_name' => $input['tag_name'],
+            'user_id' => Auth::user()->id,
+            'user_tag_id' => $input['tag_id'],
             'duration' => $input['duration'],
             'description' => $input['description'],
             'start_time' => Carbon::create($input['start_time']),
@@ -38,8 +41,14 @@ class TimerController extends Controller
      * @return TimerRecords $records
      */
     public function getRecords() {
-        $records = TimerRecords::all();
+        $user = Auth::user();
 
-        return response()->json($records);
+        $userRecords = $user->timerRecords;
+        $userTags = $user->userTags->unique('tag_name')->values();
+
+        return response()->json([
+            'records' => $userRecords,
+            'tags' => $userTags,
+        ]);
     }
 }

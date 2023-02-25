@@ -15,7 +15,8 @@ namespace App\Models{
  * App\Models\TimerRecords
  *
  * @property int $id
- * @property string|null $tag_name
+ * @property int $user_id
+ * @property int|null $user_tag_id
  * @property int $duration
  * @property string|null $description
  * @property string $start_time
@@ -32,7 +33,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereTagName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereStartTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereUserTagId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereUserId($value)
  * @mixin \Eloquent
+ * @property-read \App\Models\User|null $user
  */
 	class TimerRecords extends \Eloquent {}
 }
@@ -67,10 +71,41 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
- * @mixin \Eloquent
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+ * @mixin \Eloquent
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TimerRecords> $timerRecords
+ * @property-read int|null $timer_records_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\UserTags> $userTags
+ * @property-read int|null $user_tags_count
  */
 	class User extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\UserTags
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property string $tag_name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|UserTags newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserTags newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserTags query()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserTags whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserTags whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserTags whereTagName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserTags whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserTags whereUserId($value)
+ * @mixin \Eloquent
+ * @property-read \App\Models\User|null $user
+ */
+	class UserTags extends \Eloquent {}
 }
 
