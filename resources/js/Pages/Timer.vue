@@ -1,5 +1,5 @@
 <script setup>
-import { Head } from "@inertiajs/vue3";
+import { Head, usePage } from "@inertiajs/vue3";
 import { computed, onMounted, ref } from "vue";
 import moment from "moment-timezone";
 import _ from "lodash";
@@ -187,6 +187,8 @@ function createNewTag() {
         // TODO: show error msg when no input value.
     }
 }
+
+const user = computed(() => usePage().props.auth.user);
 </script>
 
 <template>
@@ -216,7 +218,7 @@ function createNewTag() {
         </CustomModal>
         <div class="relative top-1/4">
             <div class="text-center">
-                <div>
+                <div v-if="user">
                     <select class="rounded mb-4" @change="selectTag($event)">
                         <option selected disabled>
                             --Please select a tag--
@@ -226,7 +228,7 @@ function createNewTag() {
                         </option>
                     </select>
                     <button
-                        class="btn btn-yellow mx-2 my-4"
+                        class="btn btn-yellow ml-2 my-4"
                         @click="() => (showModal = true)"
                     >
                         +
@@ -258,7 +260,7 @@ function createNewTag() {
                         Continue
                     </button>
                     <button
-                        v-if="timerStatus === 'stopped'"
+                        v-if="timerStatus === 'stopped' && user"
                         class="btn btn-yellow mx-2 my-4"
                         @click="saveRecord"
                     >

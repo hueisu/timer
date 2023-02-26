@@ -49,7 +49,7 @@ class TimerController extends Controller
             return response()->json([
                 'records' => [],
                 'tags' => [],
-                'message' => 'User not found. Please login.',
+                'message' => 'Please log in.',
             ]);
         }
 
