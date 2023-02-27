@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class, 'user_id')->after('id');
             $table->dropColumn('tag_name');
             $table->foreignIdFor(UserTag::class, 'user_tag_id')->after('user_id');
+            $table->renameColumn('started_time', 'start_time');
         });
     }
 
