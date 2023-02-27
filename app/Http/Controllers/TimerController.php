@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TimerRecords;
-use App\Models\UserTags;
+use App\Models\TimerRecord;
+use App\Models\UserTag;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +31,7 @@ class TimerController extends Controller
             'description' => $input['description'],
             'start_time' => Carbon::create($input['start_time']),
         ];
-        TimerRecords::create($record);
+        TimerRecord::create($record);
 
         return response()->json(['message' => 'Timer record created.']);
     }
@@ -40,7 +40,7 @@ class TimerController extends Controller
      * Get timer records
      * 
      * @param $tagId
-     * @return TimerRecords $records
+     * @return TimerRecord $records
      */
     public function getRecords($tagId = null) {
         $user = Auth::user();
@@ -54,7 +54,7 @@ class TimerController extends Controller
         }
 
         if ($tagId) {
-            $userRecords = TimerRecords::where('user_id', $user->id)->where('user_tag_id', $tagId)->get();
+            $userRecords = TimerRecord::where('user_id', $user->id)->where('user_tag_id', $tagId)->get();
         } else {
             $userRecords = $user->timerRecords;
         }
@@ -76,7 +76,7 @@ class TimerController extends Controller
     public function createNewTag(Request $request) {
         $user = Auth::user();
 
-        UserTags::create([
+        UserTag::create([
             'user_id' => $user->id,
             'tag_name' => $request->input('newTagName'),
         ]);
