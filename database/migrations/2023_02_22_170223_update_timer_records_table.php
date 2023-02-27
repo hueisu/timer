@@ -15,7 +15,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('timer_records', function (Blueprint $table) {
-            $table->foreignIdFor(User::class, 'user_id')->after('id');
+            $table->foreignIdFor(Users::class, 'user_id')->after('id');
             $table->dropColumn('tag_name');
             $table->foreignIdFor(UserTags::class, 'tag_name')->after('user_id');
         });
