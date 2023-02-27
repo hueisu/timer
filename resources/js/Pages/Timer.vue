@@ -194,6 +194,7 @@ const user = computed(() => usePage().props.auth.user);
 <template>
     <Head>
         <title>{{ second ? convertDuration(second) + " - " : "" }}Timer</title>
+        <link rel="icon" type="image/x-icon" href="/images/teddy.jpg" />
     </Head>
     <BaseLayout>
         <LoadingOverlay :is-loading="isLoading"></LoadingOverlay>
