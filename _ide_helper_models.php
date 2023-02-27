@@ -12,7 +12,7 @@
 
 namespace App\Models{
 /**
- * App\Models\TimerRecords
+ * App\Models\TimerRecord
  *
  * @property int $id
  * @property int $user_id
@@ -22,23 +22,23 @@ namespace App\Models{
  * @property string $start_time
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords query()
- * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereDuration($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereStartedTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereTagName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereStartTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereUserTagId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TimerRecords whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecord newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecord newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecord query()
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecord whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecord whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecord whereDuration($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecord whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecord whereStartedTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecord whereTagName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecord whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecord whereStartTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecord whereUserTagId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TimerRecord whereUserId($value)
  * @mixin \Eloquent
  * @property-read \App\Models\User|null $user
  */
-	class TimerRecords extends \Eloquent {}
+	class TimerRecord extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -77,10 +77,10 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
  * @mixin \Eloquent
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TimerRecords> $timerRecords
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TimerRecord> $timerRecord
  * @property-read int|null $timer_records_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\UserTags> $userTags
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\UserTag> $userTag
  * @property-read int|null $user_tags_count
  */
 	class User extends \Eloquent {}
@@ -88,24 +88,24 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\UserTags
+ * App\Models\UserTag
  *
  * @property int $id
  * @property int $user_id
  * @property string $tag_name
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|UserTags newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|UserTags newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|UserTags query()
- * @method static \Illuminate\Database\Eloquent\Builder|UserTags whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserTags whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserTags whereTagName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserTags whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserTags whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserTag newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserTag newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserTag query()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserTag whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserTag whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserTag whereTagName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserTag whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserTag whereUserId($value)
  * @mixin \Eloquent
  * @property-read \App\Models\User|null $user
  */
-	class UserTags extends \Eloquent {}
+	class UserTag extends \Eloquent {}
 }
 

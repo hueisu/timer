@@ -79,11 +79,11 @@ class User extends Authenticatable
 
     public function timerRecords()
     {
-        return $this->hasMany(TimerRecords::class);
+        return $this->hasMany(TimerRecord::class);
     }
 
     public function userTags()
     {
-        return $this->hasMany(UserTags::class);
+        return $this->hasMany(UserTag::class);
     }
 }
