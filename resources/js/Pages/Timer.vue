@@ -163,7 +163,7 @@ const showModal = ref(false);
 const newTagName = ref(null);
 
 function createNewTag() {
-    if (newTagName) {
+    if (newTagName.value) {
         isLoading.value = true;
         axios
             .post("/create_new_tag", { newTagName: newTagName.value })
@@ -181,6 +181,7 @@ function createNewTag() {
                     message.value.status = "error";
                     message.value.message = res.data.message;
                     messageRef.value.show();
+                    isLoading.value = false;
                 }
             });
     } else {
